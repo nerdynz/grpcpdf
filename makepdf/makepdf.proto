@@ -24,7 +24,12 @@ package makepdf;
 service MakePDF {
   // A simple RPC.
 
+  rpc Ping(Pong) returns (Pong) {}
   rpc GetPDFFromURL(PDFParams) returns (PDFFile) {}
+}
+
+message Pong {
+  string msg = 1; 
 }
 
 message PDFParams {

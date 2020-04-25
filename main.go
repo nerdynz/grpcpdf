@@ -30,6 +30,12 @@ func main() {
 type server struct {
 }
 
+func (s *server) Ping(ctx context.Context, params *makepdf.Pong) (*makepdf.Pong, error) {
+	return &makepdf.Pong{
+		Msg: "hello",
+	}, nil
+}
+
 func (s *server) GetPDFFromURL(ctx context.Context, params *makepdf.PDFParams) (*makepdf.PDFFile, error) {
 	url := params.GetUrl()
 
