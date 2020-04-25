@@ -14,7 +14,7 @@ import (
 
 func main() {
 	settings := trove.Load()
-	lis, err := net.Listen("tcp", ":"+settings.GetWithDefault("GRPC_PORT", "5534"))
+	lis, err := net.Listen("tcp", ":"+settings.Get("GRPC_PORT"))
 	if err != nil {
 		logrus.Error(err)
 		panic(err)
