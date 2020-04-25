@@ -13,6 +13,8 @@ import (
 )
 
 func main() {
+	logrus.Info("starting")
+
 	settings := trove.Load()
 	lis, err := net.Listen("tcp", ":"+settings.Get("GRPC_PORT"))
 	if err != nil {

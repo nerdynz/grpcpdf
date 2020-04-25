@@ -2,7 +2,7 @@
 
 jeeves is a helpful dude. 
 
-we've equipped hime with a pdf generator
+we've equipped him with a pdf generator
 
 
 ### PROTO GEN
