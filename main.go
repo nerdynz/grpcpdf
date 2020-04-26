@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"net"
 
 	pdf "github.com/SebastiaanKlippert/go-wkhtmltopdf"
@@ -13,19 +14,38 @@ import (
 )
 
 func main() {
-	logrus.Info("starting")
-
 	settings := trove.Load()
-	lis, err := net.Listen("tcp", ":"+settings.Get("GRPC_PORT"))
+
+	// CHECK wkhtmltopdf
+	log.Println("Checking wkhtmltopdf")
+	pdfg, err := pdf.NewPDFGenerator()
 	if err != nil {
-		logrus.Error(err)
-		panic(err)
+		log.Fatalln(err)
+	}
+	pdfg.Version.Set(true)
+
+	log.Println("Creating a page")
+	err = pdfg.Create()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	log.Println("Getting Version")
+	bts := pdfg.Bytes()
+	log.Println(string(bts))
+
+	// SERVER
+	grpcPort := settings.Get("GRPC_PORT")
+	log.Println("Running on internal", grpcPort, "tcp port.")
+
+	lis, err := net.Listen("tcp", ":"+grpcPort)
+	if err != nil {
+		log.Fatalln(err)
 	}
 	s := grpc.NewServer()
 	makepdf.RegisterMakePDFServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
-		logrus.Error(err)
-		panic(err)
+		log.Fatalln(err)
 	}
 }
 
