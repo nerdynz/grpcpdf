@@ -36,6 +36,9 @@ func main() {
 
 	// SERVER
 	grpcPort := settings.Get("GRPC_PORT")
+	if grpcPort == "" {
+		grpcPort = "3456"
+	}
 	log.Println("Running on internal", grpcPort, "tcp port.")
 
 	lis, err := net.Listen("tcp", ":"+grpcPort)
@@ -63,7 +66,7 @@ func (s *server) GetPDFFromURL(ctx context.Context, params *makepdf.PDFParams) (
 
 	pdfg, err := pdf.NewPDFGenerator()
 	if err != nil {
-		logrus.Error("Failed on => ", url)
+		logrus.Error("Failed on => ", url, "with err", err)
 		return nil, err
 	}
 
