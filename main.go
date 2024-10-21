@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"strings"
 
 	pdf "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/nerdynz/trove"
@@ -64,6 +65,11 @@ func (s *server) Ping(ctx context.Context, params *makepdf.Pong) (*makepdf.Pong,
 func (s *server) GetPDFFromURL(ctx context.Context, params *makepdf.PDFParams) (*makepdf.PDFFile, error) {
 	url := params.GetUrl()
 
+	if strings.HasPrefix(url, "http://") {
+		parts := strings.Split(url, "http://")
+		url = "https://" + parts[1]
+	}
+
 	pdfg, err := pdf.NewPDFGenerator()
 	if err != nil {
 		logrus.Error("Failed on => ", url, "with err", err)
@@ -107,7 +113,7 @@ func (s *server) GetPDFFromURL(ctx context.Context, params *makepdf.PDFParams) (
 	// Create PDF document in internal buffer
 	err = pdfg.Create()
 	if err != nil {
-		logrus.Error("Failed on => ", url)
+		logrus.Error("Failed on => ", url, "with err", err)
 		return nil, err
 	}
 
